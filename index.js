@@ -4,11 +4,12 @@ const authMiddleware = require('./middleware/auth');
 const errorHandler = require('./middleware/error');
 const routes = require('./routes');
 const pkg = require('./package.json');
+const error = require('./middleware/error');
+// Referencia a la conexión de la Base de Datos (MySQL)
+const pool = require('./database/database');
 
-const { port, dbUrl, secret } = config;
+const { port, secret, db } = config;
 const app = express();
-
-// TODO: Conexión a la Base de Datos (MongoDB o MySQL)
 
 app.set('config', config);
 app.set('pkg', pkg);

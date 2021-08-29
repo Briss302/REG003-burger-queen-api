@@ -5,34 +5,47 @@ services:
     # https://hub.docker.com/_/mongo
     # https://hub.docker.com/_/postgres
     # https://hub.docker.com/_/mysql
-    networks:
-      - private
-  node:
-    image: node:12 # https://hub.docker.com/_/node/
-    user: node
-    working_dir: /home/node/app
-    environment:
-      NODE_ENV: production
-      PORT: 8080
-      DB_URL: <CONNECTION STRING>
-      JWT_SECRET: xxxxxxxx
-      ADMIN_EMAIL: admin@localhost
-      ADMIN_PASSWORD: changeme
+    image: mysql:5
+    #Guardar en nuestra pc toda la información creada dentro del contenedor
     volumes:
-      - ./:/home/node/app # montamos el codigo en el HOME del usuario _node_
-    expose:
-      - 8080 # nuestra app corre en el puerto 8080
+      - ./db-data:/data/mysql
     ports:
-      # mapeamos el puerto 8080 de nuestro contenedor al puerto 80 de nuestra
-      # máquina
-      - 80:8080
-    # reinstalamos las dependencias y levantamos el servidor
-    command: bash -c 'rm -rf node_modules && npm install && npm start'
-    depends_on:
-      - db
+      - "33060:3306"
+    environment:
+      MYSQL_DATABASE: "bq_database"
+      MYSQL_USER: "bq"
+      MYSQL_PASSWORD: "bqsecret"
+      MYSQL_ROOT_PASSWORD: "BQ_secret"
+    restart: always
     networks:
-      - public
       - private
+      - public
+  # node:
+  #   image: node:12 # https://hub.docker.com/_/node/
+  #   user: node
+  #   working_dir: /home/node/app
+  #   environment:
+  #     NODE_ENV: production
+  #     PORT: 8080
+  #     DB_URL: <CONNECTION STRING>
+  #     JWT_SECRET: xxxxxxxx
+  #     ADMIN_EMAIL: admin@localhost
+  #     ADMIN_PASSWORD: changeme
+  #   volumes:
+  #     - ./:/home/node/app # montamos el codigo en el HOME del usuario _node_
+  #   expose:
+  #     - 8080 # nuestra app corre en el puerto 8080
+  #   ports:
+  #     # mapeamos el puerto 8080 de nuestro contenedor al puerto 80 de nuestra
+  #     # máquina
+  #     - 80:8080
+  #   # reinstalamos las dependencias y levantamos el servidor
+  #   command: bash -c 'rm -rf node_modules && npm install && npm start'
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - public
+  #     - private
 networks:
   public:
     internal: false
