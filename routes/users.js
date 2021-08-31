@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-
+const pool = require('../database/database');
 const {
   requireAuth,
   requireAdmin,
@@ -8,7 +8,6 @@ const {
 const {
   getUsers,
 } = require('../controller/users');
-
 
 const initAdminUser = (app, next) => {
   const { adminEmail, adminPassword } = app.get('config');
@@ -23,9 +22,14 @@ const initAdminUser = (app, next) => {
   };
 
   // TODO: crear usuaria admin
+  pool.query('SELECT 1 + 15 AS solution', (error, results) => {
+    if (error) {
+      return console.error(error);
+    }
+    console.log(`The solution is: ${results[0].solution}`);
+  });
   next();
 };
-
 
 /*
  * Diagrama de flujo de una aplicación y petición en node - express :

@@ -9,7 +9,7 @@ CREATE TABLE users(
   id INT(11) NOT NULL,
   email VARCHAR(16) NOT NULL,
   password VARCHAR(60) NOT NULL,
-  role TINYINT default 0 NOT NULL
+  role JSON NOT NULL
 );
 
 ALTER TABLE users

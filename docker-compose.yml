@@ -5,7 +5,7 @@ services:
     # https://hub.docker.com/_/mongo
     # https://hub.docker.com/_/postgres
     # https://hub.docker.com/_/mysql
-    image: mysql:5
+    image: mysql:5.7
     #Guardar en nuestra pc toda la información creada dentro del contenedor
     volumes:
       - ./db-data:/data/mysql

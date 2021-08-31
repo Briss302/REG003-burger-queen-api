@@ -6,10 +6,19 @@ const routes = require('./routes');
 const pkg = require('./package.json');
 const error = require('./middleware/error');
 // Referencia a la conexión de la Base de Datos (MySQL)
-const pool = require('./database/database');
+const conexion = require('./database/database');
 
-const { port, secret, db } = config;
+const { port, secret } = config;
 const app = express();
+
+// TODO: Conexión a la Base de Datos (MySQL)
+conexion.connect((error) => {
+  if (error) {
+    throw error;
+  } else {
+    console.info('db is conected');
+  }
+});
 
 app.set('config', config);
 app.set('pkg', pkg);
