@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const pool = require('../database/database');
+const conexion = require('../database/database');
 const {
   requireAuth,
   requireAdmin,
@@ -9,26 +9,31 @@ const {
   getUsers,
 } = require('../controller/users');
 
-const initAdminUser = (app, next) => {
-  const { adminEmail, adminPassword } = app.get('config');
-  if (!adminEmail || !adminPassword) {
-    return next();
-  }
-
-  const adminUser = {
-    email: adminEmail,
-    password: bcrypt.hashSync(adminPassword, 10),
-    roles: { admin: true },
-  };
-
-  // TODO: crear usuaria admin
-  pool.query('SELECT 1 + 15 AS solution', (error, results) => {
-    if (error) {
-      return console.error(error);
+const initAdminUser = async (app, next) => {
+  try {
+    const { adminEmail, adminPassword } = app.get('config');
+    if (!adminEmail || !adminPassword) {
+      return next();
     }
-    console.log(`The solution is: ${results[0].solution}`);
-  });
-  next();
+
+    const adminUser = {
+      email: adminEmail,
+      password: bcrypt.hashSync(adminPassword, 10),
+      rolesAdmin: true,
+    };
+
+    // TODO: crear usuaria admin
+    await conexion.query('SELECT * FROM users WHERE email =?', adminUser.email,
+      (error, result) => {
+        if (error) throw error;
+        if (!result) {
+          conexion.query('INSERT INTO users SET ?', [adminUser]);
+        }
+        return next();
+      });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 /*
