@@ -7,6 +7,7 @@ const {
 
 const {
   getUsers,
+  // createUsers,
 } = require('../controller/users');
 
 const initAdminUser = async (app, next) => {
@@ -23,10 +24,16 @@ const initAdminUser = async (app, next) => {
     };
 
     // TODO: crear usuaria admin
+    // conexion.query('SELECT 1 + 15 AS solution', (error, results) => {
+    //   if (error) {
+    //     return console.error(error);
+    //   }
+    //   console.log(`The solution is: ${results[0].solution}`);
+    // });
     await conexion.query('SELECT * FROM users WHERE email =?', adminUser.email,
       (error, result) => {
         if (error) throw error;
-        if (!result) {
+        if (result < 1) {
           conexion.query('INSERT INTO users SET ?', [adminUser]);
         }
         return next();

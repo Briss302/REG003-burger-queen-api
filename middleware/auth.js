@@ -32,15 +32,16 @@ module.exports = (secret) => (req, resp, next) => {
   });
 };
 
-module.exports.isAuthenticated = (req) => (
-  // TODO: decidir por la informacion del request si la usuaria esta autenticada
-  req.authToken || false
-);
+// TODO: decidir por la informacion del request si la usuaria esta autenticada
+module.exports.isAuthenticated = (req) => req.authToken || false;
 
-module.exports.isAdmin = (req) => (
+module.exports.isAdmin = (req) => {
   // TODO: decidir por la informacion del request si la usuaria es admin
-  req.authToken.rolesAdmin || false
-);
+  if (req.authToken.rolesAdmin === 1) {
+    return true;
+  }
+  return false;
+};
 
 module.exports.requireAuth = (req, resp, next) => (
   (!module.exports.isAuthenticated(req))
