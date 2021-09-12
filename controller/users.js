@@ -17,5 +17,5 @@ module.exports = {
       next(error);
     }
   },
-  // createUser: (req, resp, next) => {},
+  createUser: (req, resp, next) => {},
 };

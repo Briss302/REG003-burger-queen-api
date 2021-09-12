@@ -100,14 +100,14 @@ const waitForServerToBeReady = (retries = 10) => new Promise((resolve, reject) =
   }, 1000);
 });
 
-module.exports = () => new Promise((resolve, reject) => {
+module.exports = () => new Promise(async (resolve, reject) => {
   if (process.env.REMOTE_URL) {
     console.info(`Running tests on remote server ${process.env.REMOTE_URL}`);
     return resolve();
   }
 
   // TODO: Configurar DB de tests
-  // conexion.connect();
+  await conexion.connect();
 
   console.info('Staring local server...');
   const child = spawn('node', ['index.js', process.env.PORT || 8888], {
