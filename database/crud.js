@@ -10,11 +10,17 @@ module.exports = {
   }),
   insert: (table, dataToInsert) => new Promise((resolve, reject) => {
     const sql = `INSERT INTO ${table} SET ?`;
-    conexion.query(sql, dataToInsert, (error, result) => {
+    conexion.query(sql, [dataToInsert], (error, result) => {
+      if (error) reject(error);
+      resolve(result);
+    });
+  }),
+  updateById: (table, dataToUpdate, keyValue) => new Promise((resolve, reject) => {
+    const sql = `UPDATE ${table} SET ? WHERE ${keyValue} =?`;
+    conexion.query(sql, [dataToUpdate], (error, result) => {
       if (error) reject(error);
       resolve(result);
     });
   }),
 
-  delete: () => {},
 };
