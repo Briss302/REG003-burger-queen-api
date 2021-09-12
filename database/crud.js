@@ -8,7 +8,13 @@ module.exports = {
       resolve(result);
     });
   }),
-  insert: () => {},
-  update: () => {},
+  insert: (table, dataToInsert) => new Promise((resolve, reject) => {
+    const sql = `INSERT INTO ${table} SET ?`;
+    conexion.query(sql, dataToInsert, (error, result) => {
+      if (error) reject(error);
+      resolve(result);
+    });
+  }),
+
   delete: () => {},
 };
