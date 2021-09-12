@@ -22,5 +22,11 @@ module.exports = {
       resolve(result);
     });
   }),
-
+  delete: (table, keyValue) => new Promise((resolve, reject) => {
+    const sql = `DELETE FROM ${table} WHERE ${keyValue} =?`;
+    conexion.query(sql, (error, result) => {
+      if (error) reject(error);
+      resolve(result);
+    });
+  }),
 };
