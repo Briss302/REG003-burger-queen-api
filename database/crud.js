@@ -1,4 +1,5 @@
 const conexion = require('./database');
+const { isAValidNumb, isAValidEmail } = require('../utils/utils');
 
 module.exports = {
   selectAllData: (table) => new Promise((resolve, reject) => {
@@ -8,23 +9,48 @@ module.exports = {
       resolve(result);
     });
   }),
-  insert: (table, dataToInsert) => new Promise((resolve, reject) => {
+  selectDataByUid: (table, valueUid) => new Promise((resolve, reject) => {
+    let sql;
+    if (isAValidNumb(valueUid)) {
+      sql = `SELECT * FROM ${table} WHERE id =?`;
+    }
+    if (isAValidEmail(valueUid)) {
+      sql = `SELECT * FROM ${table} WHERE email =?`;
+    }
+    conexion.query(sql, valueUid, (error, result) => {
+      if (error) reject(error);
+      resolve(result[0]);
+    });
+  }),
+  insertData: (table, dataToInsert) => new Promise((resolve, reject) => {
     const sql = `INSERT INTO ${table} SET ?`;
     conexion.query(sql, [dataToInsert], (error, result) => {
       if (error) reject(error);
       resolve(result);
     });
   }),
-  updateById: (table, dataToUpdate, keyValue) => new Promise((resolve, reject) => {
-    const sql = `UPDATE ${table} SET ? WHERE ${keyValue} =?`;
-    conexion.query(sql, [dataToUpdate], (error, result) => {
+  updateDataByUid: (table, dataToUpdate, valueUid) => new Promise((resolve, reject) => {
+    let sql;
+    if (isAValidNumb(valueUid)) {
+      sql = `UPDATE ${table} SET ? WHERE id =?`;
+    }
+    if (isAValidEmail(valueUid)) {
+      sql = `UPDATE ${table} SET ? WHERE email =?`;
+    }
+    conexion.query(sql, [dataToUpdate, valueUid], (error, result) => {
       if (error) reject(error);
       resolve(result);
     });
   }),
-  delete: (table, keyValue) => new Promise((resolve, reject) => {
-    const sql = `DELETE FROM ${table} WHERE ${keyValue} =?`;
-    conexion.query(sql, (error, result) => {
+  deleteDataByUid: (table, valueUid) => new Promise((resolve, reject) => {
+    let sql;
+    if (isAValidNumb(valueUid)) {
+      sql = `DELETE FROM ${table} WHERE id =?`;
+    }
+    if (isAValidEmail(valueUid)) {
+      sql = `DELETE FROM ${table} WHERE email =?`;
+    }
+    conexion.query(sql, valueUid, (error, result) => {
       if (error) reject(error);
       resolve(result);
     });

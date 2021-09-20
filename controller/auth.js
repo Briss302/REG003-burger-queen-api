@@ -19,13 +19,14 @@ module.exports = {
         'SELECT * FROM users WHERE email =?', email,
         (error, result) => {
           if (error) throw error;
-          if (result.length < 1) {
+          if (result.length === 0) {
             return resp.status(400).json({ msg: 'usuario no exite' });
           }
           result.forEach((doc) => bcrypt.compare(password, doc.password,
             (error, result) => {
+              // console.log(result);
               if (error) console.info(error);
-              if (!result) return resp.status(404).json({ msg: 'contraseña incorrecta' });
+              else if (!result) return next(404);
               jwt.sign(
                 {
                   uid: doc.id,
@@ -45,7 +46,7 @@ module.exports = {
         },
       );
     } catch (error) {
-      return next(error);
+      return console.error(error);
     }
   },
 };
