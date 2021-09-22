@@ -17,11 +17,9 @@ module.exports = {
         page: parseInt(req.query.page, 10) || 1,
         limit: parseInt(req.query.limit, 10) || 10,
       };
-      const usersData = await selectAllData('users');
-      // const pagi = Paginate(url, options, usersData);
-      // console.log(pagi);
-      // resp.links(Paginate(url, options, usersData));
-      return resp.status(200).json(usersData);
+      const usersData = await selectAllData('users', options.page, options.limit);
+      resp.links(Paginate(url, options, usersData));
+      return resp.status(200).send(usersData);
     } catch (error) {
       next(error);
     }
@@ -137,7 +135,9 @@ module.exports = {
         // si la usuaria solicitada no existe
         if (!findUser) return next(404);
         // si no es ni admin o la misma usuaria
-        if (req.authToken.uid !== findUser.id && !isAdmin(req)) { return next(403); }
+        if (req.authToken.uid !== findUser.id && !isAdmin(req)) {
+          return next(403);
+        }
 
         // Delete usuario
         deleteDataByUid('users', uid);

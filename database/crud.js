@@ -2,8 +2,9 @@ const conexion = require('./database');
 const { isAValidNumb, isAValidEmail } = require('../utils/utils');
 
 module.exports = {
-  selectAllData: (table) => new Promise((resolve, reject) => {
-    const sql = `SELECT * FROM ${table}`;
+  selectAllData: (table, page, limit) => new Promise((resolve, reject) => {
+    const startPage = (page - 1) * limit;
+    const sql = `SELECT * FROM ${table} LIMIT ${startPage},${limit}`;
     conexion.query(sql, (error, result) => {
       if (error) reject(error);
       resolve(result);
@@ -56,3 +57,12 @@ module.exports = {
     });
   }),
 };
+
+// selectAllData: (table) =>
+//   new Promise((resolve, reject) => {
+//     const sql = `SELECT * FROM ${table}`;
+//     conexion.query(sql, (error, result) => {
+//       if (error) reject(error);
+//       resolve(result);
+//     });
+//   }),
