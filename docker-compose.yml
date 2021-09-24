@@ -9,6 +9,7 @@ services:
     #Guardar en nuestra pc toda la información creada dentro del contenedor
     volumes:
       - ./db-data:/data/mysql
+
     ports:
       - "33060:3306"
     environment:

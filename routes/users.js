@@ -7,6 +7,10 @@ const {
 
 const {
   getUsers,
+  getUserUid,
+  createUser,
+  updateUser,
+  deleteUser,
 } = require('../controller/users');
 
 const initAdminUser = async (app, next) => {
@@ -26,7 +30,7 @@ const initAdminUser = async (app, next) => {
     await conexion.query('SELECT * FROM users WHERE email =?', adminUser.email,
       (error, result) => {
         if (error) throw error;
-        if (!result) {
+        if (result < 1) {
           conexion.query('INSERT INTO users SET ?', [adminUser]);
         }
         return next();
@@ -103,8 +107,7 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.get('/users/:uid', requireAuth, (req, resp) => {
-  });
+  app.get('/users/:uid', requireAuth, getUserUid);
 
   /**
    * @name POST /users
@@ -125,8 +128,7 @@ module.exports = (app, next) => {
    * @code {401} si no hay cabecera de autenticación
    * @code {403} si ya existe usuaria con ese `email`
    */
-  app.post('/users', requireAdmin, (req, resp, next) => {
-  });
+  app.post('/users', requireAdmin, createUser);
 
   /**
    * @name PUT /users
@@ -150,8 +152,7 @@ module.exports = (app, next) => {
    * @code {403} una usuaria no admin intenta de modificar sus `roles`
    * @code {404} si la usuaria solicitada no existe
    */
-  app.put('/users/:uid', requireAuth, (req, resp, next) => {
-  });
+  app.put('/users/:uid', requireAuth, updateUser);
 
   /**
    * @name DELETE /users
@@ -169,8 +170,7 @@ module.exports = (app, next) => {
    * @code {403} si no es ni admin o la misma usuaria
    * @code {404} si la usuaria solicitada no existe
    */
-  app.delete('/users/:uid', requireAuth, (req, resp, next) => {
-  });
+  app.delete('/users/:uid', requireAuth, deleteUser);
 
   initAdminUser(app, next);
 };
